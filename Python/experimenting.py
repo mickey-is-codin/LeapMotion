@@ -1,4 +1,6 @@
 import Leap, sys, thread, time
+import numpy as np
+import matplotlib.pyplot as plt
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 
 class LeapMotionListener(Leap.Listener):
@@ -56,11 +58,34 @@ class LeapMotionListener(Leap.Listener):
             normal = hand.palm_normal
             direction = hand.direction
 
+            #Plotting the palm position
+            plt.axis([0, 10, 0, 1])
+            plt.ion()
+
             print "Pitch: " + str(direction.pitch * Leap.RAD_TO_DEG)
             print "Roll: " + str(direction.roll * Leap.RAD_TO_DEG)
             print "Yaw: " + str(direction.yaw * Leap.RAD_TO_DEG)
 
+            arm = hand.arm
+            print "Arm Direction: " + str(arm.direction)
+            print "Wrist Position: " + str(arm.wrist_position)
+            print "Elbow Position: " + str(arm.elbow_position)
 
+            for finger in hand.fingers:
+                print "Type: " + self.finger_names[finger.type()] + " ID: " + str(finger.id) + " Length (mm): " + str(finger.length) + " Width (mm): " + str(finger.width)
+
+                for b in range(0, 4):
+                    bone = finger.bone(b)
+                    print "Bone: " + self.bone_names[bone.type] + " Start: " + str(bone.prev_joint) + " End: " + str(bone.next_joint) + " Direction: " + str(bone.direction)
+
+    def plot(): #Eventually accept some hand parameters as arguments
+        for i in range(10):
+                y = np.random.random()
+                plt.scatter(i,y)
+                plt.pause(0.05)
+
+            while True:
+                plt.pause(0.05)
 
     
 def main():
